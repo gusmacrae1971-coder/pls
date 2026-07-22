@@ -1,0 +1,101 @@
+{
+  "system_id": "palantir-aip-demo-001",
+  "version": "1.2.3",
+  "timestamp": "2026-07-22T10:00:00Z",
+  "training": {
+    "dataset_sources": ["commercial-satellite-v3", "law-enforcement-records-2025"],
+    "dataset_version": "2025-06-01",
+    "preprocessing_steps": ["geospatial-normalization", "pii-redaction-v2"],
+    "training_config": "config-aip-v1.2.json"
+  },
+  "safety": {
+    "classifiers": [
+      { "name": "pii-detector", "threshold": 0.85, "version": "1.0.1" }
+    ],
+    "reward_model": "rm-v1.2",
+    "RLHF_iteration": "rlhf-2026-01"
+  },
+  "eval": {
+    "benchmarks": [
+      { "name": "accuracy-benchmark", "score": 0.94, "timestamp": "2026-01-15T12:00:00Z" }
+    ],
+    "external_red_team_report": "https://audit.example.com/redteam-2026",
+    "adversarial_test_results": "https://audit.example.com/adversarial-2026"
+  },
+  "incidents": [
+    {
+      "id": "INC-001",
+      "date_detected": "2026-02-01T08:00:00Z",
+      "description": "Data export exceeded 50mb threshold",
+      "root_cause": "User requested unaggregated dataset",
+      "corrective_action": "Added export size limit enforcement",
+      "measured_improvement": 0.0,
+      "verification_audit": "https://audit.example.com/inc-001"
+    }
+  ],
+  "thresholds": [
+    {
+      "id": "THR-001",
+      "type": "operational",
+      "metric": "data_export_size_mb",
+      "condition": ">",
+      "limit": 50,
+      "action_on_breach": ["block_operation", "notify_governance_officer"],
+      "last_breach": {
+        "timestamp": "2026-02-01T08:00:00Z",
+        "value": 75,
+        "action_taken": "blocked_export_and_notified_governance"
+      }
+    }
+  ],
+  "data_exports": [
+    {
+      "id": "EXP-001",
+      "destination": "analytics-team-s3",
+      "export_method": "direct_download",
+      "fields_exported": [
+        { "field_name": "name", "data_type": "string", "is_pii": true, "is_sensitive": false },
+        { "field_name": "address", "data_type": "string", "is_pii": true, "is_sensitive": false }
+      ],
+      "row_limit_applied": 1000,
+      "timestamp": "2026-07-22T09:00:00Z",
+      "authorized_by": "user-123"
+    }
+  ],
+  "civilian_data_overrides": [
+    {
+      "id": "OVR-001",
+      "trigger_event": "national_security_request_2026-07-22",
+      "data_scope": [
+        { "dataset_id": "commercial-satellite-v3", "object_type": "geospatial" }
+      ],
+      "override_type": ["privacy_bypass"],
+      "justification": "National security exemption under Article X",
+      "approving_authority": "agency-director-456",
+      "oversight_body": "parliamentary-review-committee",
+      "timestamp": "2026-07-22T11:00:00Z",
+      "duration": "temporary",
+      "expiration": "2026-08-22T11:00:00Z",
+      "post_override_review": [
+        { "timestamp": "2026-07-22T12:00:00Z", "findings": "Justified and documented" }
+      ]
+    }
+  ],
+  "model_lineage": {
+    "model_id": "aip-v1.2.3",
+    "parent_model": "aip-v1.2.2",
+    "deployment_date": "2026-07-01T00:00:00Z",
+    "retirement_date": null,
+    "rollback_history": [],
+    "compatibility_versions": ["v0.1", "v0.2"]
+  },
+  "changes": [
+    {
+      "from_version": "1.2.2",
+      "to_version": "1.2.3",
+      "changes_description": "Fixed PII detection threshold",
+      "timestamp": "2026-07-01T00:00:00Z",
+      "approval_by": "engineering-lead-789"
+    }
+  ]
+}
