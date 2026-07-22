@@ -1,0 +1,184 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://provenance-ledger.ai/v0.1/schema",
+  "title": "Provenance Ledger Standard v0.1",
+  "type": "object",
+  "required": ["system_id", "version", "timestamp"],
+  "properties": {
+    "system_id": { "type": "string" },
+    "version": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "training": {
+      "type": "object",
+      "properties": {
+        "dataset_sources": { "type": "array", "items": { "type": "string" } },
+        "dataset_version": { "type": "string" },
+        "preprocessing_steps": { "type": "array", "items": { "type": "string" } },
+        "training_config": { "type": "string" }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "properties": {
+        "classifiers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "threshold": { "type": "number" },
+              "version": { "type": "string" }
+            }
+          }
+        },
+        "reward_model": { "type": "string" },
+        "RLHF_iteration": { "type": "string" }
+      }
+    },
+    "eval": {
+      "type": "object",
+      "properties": {
+        "benchmarks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "score": { "type": "number" },
+              "timestamp": { "type": "string", "format": "date-time" }
+            }
+          }
+        },
+        "external_red_team_report": { "type": "string" },
+        "adversarial_test_results": { "type": "string" }
+      }
+    },
+    "incidents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "date_detected": { "type": "string", "format": "date-time" },
+          "description": { "type": "string" },
+          "root_cause": { "type": "string" },
+          "corrective_action": { "type": "string" },
+          "measured_improvement": { "type": "number" },
+          "verification_audit": { "type": "string" }
+        }
+      }
+    },
+    "thresholds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string", "enum": ["operational", "governance", "safety"] },
+          "metric": { "type": "string" },
+          "condition": { "type": "string" },
+          "limit": { "type": "number" },
+          "action_on_breach": { "type": "array", "items": { "type": "string" } },
+          "last_breach": {
+            "type": "object",
+            "properties": {
+              "timestamp": { "type": "string", "format": "date-time" },
+              "value": { "type": "number" },
+              "action_taken": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "data_exports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "destination": { "type": "string" },
+          "export_method": { "type": "string" },
+          "fields_exported": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field_name": { "type": "string" },
+                "data_type": { "type": "string" },
+                "is_pii": { "type": "boolean" },
+                "is_sensitive": { "type": "boolean" }
+              }
+            }
+          },
+          "row_limit_applied": { "type": "number" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "authorized_by": { "type": "string" }
+        }
+      }
+    },
+    "civilian_data_overrides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "trigger_event": { "type": "string" },
+          "data_scope": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "dataset_id": { "type": "string" },
+                "object_type": { "type": "string" }
+              }
+            }
+          },
+          "override_type": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["privacy_bypass", "access_elevation", "purpose_shift"] }
+          },
+          "justification": { "type": "string" },
+          "approving_authority": { "type": "string" },
+          "oversight_body": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "duration": { "type": "string", "enum": ["temporary", "permanent"] },
+          "expiration": { "type": "string", "format": "date-time" },
+          "post_override_review": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "timestamp": { "type": "string", "format": "date-time" },
+                "findings": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "model_lineage": {
+      "type": "object",
+      "properties": {
+        "model_id": { "type": "string" },
+        "parent_model": { "type": "string" },
+        "deployment_date": { "type": "string", "format": "date-time" },
+        "retirement_date": { "type": "string", "format": "date-time" },
+        "rollback_history": { "type": "array", "items": { "type": "string" } },
+        "compatibility_versions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from_version": { "type": "string" },
+          "to_version": { "type": "string" },
+          "changes_description": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "approval_by": { "type": "string" }
+        }
+      }
+    }
+  }
+}
